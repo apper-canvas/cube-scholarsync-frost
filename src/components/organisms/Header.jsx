@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useSelector } from 'react-redux';
 import ApperIcon from '@/components/ApperIcon';
 import SearchBar from '@/components/molecules/SearchBar';
 import Button from '@/components/atoms/Button';
+import { AuthContext } from '@/App';
 
 const Header = ({ title, onMenuClick, searchValue, onSearchChange, showSearch = false }) => {
+  const { user } = useSelector((state) => state.user);
+  const { logout } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      logout();
+    }
+  };
+
   return (
     <header className="bg-white border-b border-gray-200 px-4 lg:px-6 py-4">
       <div className="flex items-center justify-between">
@@ -29,7 +40,7 @@ const Header = ({ title, onMenuClick, searchValue, onSearchChange, showSearch = 
             />
           )}
           
-          <div className="flex items-center space-x-2">
+<div className="flex items-center space-x-2">
             <Button
               variant="ghost"
               size="sm"
@@ -41,12 +52,23 @@ const Header = ({ title, onMenuClick, searchValue, onSearchChange, showSearch = 
             
             <div className="flex items-center space-x-3 border-l border-gray-200 pl-4">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-medium text-gray-900">Ms. Johnson</p>
-                <p className="text-xs text-gray-500">Mathematics Teacher</p>
+                <p className="text-sm font-medium text-gray-900">
+                  {user?.firstName} {user?.lastName}
+                </p>
+                <p className="text-xs text-gray-500">{user?.emailAddress}</p>
               </div>
               <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">MJ</span>
+                <span className="text-white text-sm font-medium">
+                  {user?.firstName?.[0]}{user?.lastName?.[0]}
+                </span>
               </div>
+              <Button
+                onClick={handleLogout}
+                variant="ghost"
+                size="sm"
+                icon="LogOut"
+                className="text-gray-600 hover:text-gray-900"
+              />
             </div>
           </div>
         </div>
